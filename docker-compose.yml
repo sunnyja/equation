@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  php:
+    build:
+      context: docker/php
+    volumes:
+      - .:/var/www/html
+    networks:
+      - testApp
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - '80:80'
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php
+    restart: always
+    networks:
+      - testApp
+
+networks:
+  testApp:
+    driver: bridge
